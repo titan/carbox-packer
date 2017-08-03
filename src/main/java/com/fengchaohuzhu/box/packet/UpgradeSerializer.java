@@ -4,11 +4,11 @@ public class UpgradeSerializer {
   public static byte [] encode (Upgrade upgrade) throws java.io.UnsupportedEncodingException {
     short count = 0;
     int len = 2;
-    short [] tags = new short [10];
+    short [] tags = new short [11];
     short tlen = 0;
-    short [] dtags = new short [10];
+    short [] dtags = new short [11];
     short dlen = 0;
-    byte [][] strbytes = new byte[2][];
+    byte [][] strbytes = new byte[3][];
     if (upgrade.sn != 0) {
       tags[tlen] = 1;
       tlen ++;
@@ -90,31 +90,46 @@ public class UpgradeSerializer {
       }
       count ++;
     }
-    if (upgrade.supervisorUrl != null) {
+    if (upgrade.boxosChecksum != null) {
       tags[tlen] = 8;
       tlen ++;
       dtags[dlen] = 8;
       dlen ++;
-      strbytes[1] = upgrade.supervisorUrl.getBytes ("utf-8");
+      strbytes[1] = upgrade.boxosChecksum.getBytes ("utf-8");
       len += 2 + 4 + strbytes[1].length;
       count ++;
     }
-    if (upgrade.supervisorVersion != 0) {
+    if (upgrade.supervisorUrl != null) {
       tags[tlen] = 9;
+      tlen ++;
+      dtags[dlen] = 9;
+      dlen ++;
+      strbytes[2] = upgrade.supervisorUrl.getBytes ("utf-8");
+      len += 2 + 4 + strbytes[2].length;
+      count ++;
+    }
+    if (upgrade.supervisorVersion != 0) {
+      tags[tlen] = 10;
       tlen ++;
       if (0 < upgrade.supervisorVersion && upgrade.supervisorVersion < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
-        dtags[dlen] = 9;
+        dtags[dlen] = 10;
         dlen ++;
       }
       count ++;
     }
-    if (upgrade.notest != 0) {
-      tags[tlen] = 10;
+    if (upgrade.supervisorChecksum != 0) {
+      tags[tlen] = 11;
       tlen ++;
-      len += 2;
+      if (0 < upgrade.supervisorChecksum && upgrade.supervisorChecksum < 16383) {
+        len += 2;
+      } else {
+        len += 2 + 4 + 4;
+        dtags[dlen] = 11;
+        dlen ++;
+      }
       count ++;
     }
     if (count != 0) {
@@ -193,14 +208,21 @@ public class UpgradeSerializer {
         buf.putShort ((short) 0);
         break;
       case 9:
+        buf.putShort ((short) 0);
+        break;
+      case 10:
         if (0 < upgrade.supervisorVersion && upgrade.supervisorVersion < 16383) {
           buf.putShort ((short) ((upgrade.supervisorVersion + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
-      case 10:
-        buf.putShort ((short) ((upgrade.notest + 1) * 2));
+      case 11:
+        if (0 < upgrade.supervisorChecksum && upgrade.supervisorChecksum < 16383) {
+          buf.putShort ((short) ((upgrade.supervisorChecksum + 1) * 2));
+        } else {
+          buf.putShort ((short) 0);
+        }
         break;
       }
     }
@@ -239,12 +261,16 @@ public class UpgradeSerializer {
         buf.put (strbytes[1]);
         break;
       case 9:
+        buf.putInt (strbytes[2].length);
+        buf.put (strbytes[2]);
+        break;
+      case 10:
         buf.putInt (4);
         buf.putInt (upgrade.supervisorVersion);
         break;
-      case 10:
-        buf.putInt (1);
-        buf.put (upgrade.notest);
+      case 11:
+        buf.putInt (4);
+        buf.putInt (upgrade.supervisorChecksum);
         break;
       }
     }
@@ -258,7 +284,7 @@ public class UpgradeSerializer {
     short count = buf.getShort();
     Upgrade upgrade = new Upgrade();
     if (count > 0) {
-      short [] dtags = new short[10];
+      short [] dtags = new short[11];
       int dlen = 0;
       short tag = 0;
       for (short i = 0; i < count; i ++) {
@@ -289,11 +315,11 @@ public class UpgradeSerializer {
           case 7:
             upgrade.boxosVersion = v / 2 - 1;
             break;
-          case 9:
+          case 10:
             upgrade.supervisorVersion = v / 2 - 1;
             break;
-          case 10:
-            upgrade.notest = (byte) (v / 2 - 1);
+          case 11:
+            upgrade.supervisorChecksum = v / 2 - 1;
             break;
           default:
             break;
@@ -338,16 +364,23 @@ public class UpgradeSerializer {
           int len = buf.getInt();
           byte tmp [] = new byte[len];
           buf.get (tmp);
+          upgrade.boxosChecksum = new String (tmp, "utf-8");
+        }
+        break;
+        case 9: {
+          int len = buf.getInt();
+          byte tmp [] = new byte[len];
+          buf.get (tmp);
           upgrade.supervisorUrl = new String (tmp, "utf-8");
         }
         break;
-        case 9:
+        case 10:
           buf.getInt();
           upgrade.supervisorVersion = buf.getInt();
           break;
-        case 10:
+        case 11:
           buf.getInt();
-          upgrade.notest = buf.get();
+          upgrade.supervisorChecksum = buf.getInt();
           break;
         default:
           break;

@@ -7,7 +7,8 @@ public class Upgrade {
   public int lockBoard;
   public String boxosUrl;
   public int boxosVersion;
+  public String boxosChecksum;
   public String supervisorUrl;
   public int supervisorVersion;
-  public byte notest;
+  public int supervisorChecksum;
 }
