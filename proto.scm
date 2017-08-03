@@ -39,13 +39,15 @@
   (int 1 sn) ;; 当前请求序列号
   (int 2 version) ;; 当前命令协议号
   (long 3 timestamp) ;; 当前服务器的时间戳
-  (int 4 android-board) ;; Android 板类型编号
-  (int 5 lock-board) ;; 锁控板类型编号
+  (int 4 android-board) ;; Android 板型号
+  (int 5 lock-board) ;; 锁控板型号
   (int 6 lock-amount) ;; 锁的数量
   (int 7 wireless) ;; 无线通讯方式编号
   (int 8 antenna) ;; 天线类型编号
   (int 9 card-reader) ;; 读卡器类型
   (int 10 speaker) ;; 扬声器类型
+  (int 11 router-board) ;; 路由板型号
+  (int 12 sim-no) ;; SIM 卡号
   )
 
 (struct register

@@ -4,9 +4,9 @@ public class HardwareTableSerializer {
   public static byte [] encode (HardwareTable hardwareTable) {
     short count = 0;
     int len = 2;
-    short [] tags = new short [10];
+    short [] tags = new short [12];
     short tlen = 0;
-    short [] dtags = new short [10];
+    short [] dtags = new short [12];
     short dlen = 0;
     if (hardwareTable.sn != 0) {
       tags[tlen] = 1;
@@ -128,6 +128,30 @@ public class HardwareTableSerializer {
       }
       count ++;
     }
+    if (hardwareTable.routerBoard != 0) {
+      tags[tlen] = 11;
+      tlen ++;
+      if (0 < hardwareTable.routerBoard && hardwareTable.routerBoard < 16383) {
+        len += 2;
+      } else {
+        len += 2 + 4 + 4;
+        dtags[dlen] = 11;
+        dlen ++;
+      }
+      count ++;
+    }
+    if (hardwareTable.simNo != 0) {
+      tags[tlen] = 12;
+      tlen ++;
+      if (0 < hardwareTable.simNo && hardwareTable.simNo < 16383) {
+        len += 2;
+      } else {
+        len += 2 + 4 + 4;
+        dtags[dlen] = 12;
+        dlen ++;
+      }
+      count ++;
+    }
     if (count != 0) {
       if (tags[0] != 0) {
         len += 2;
@@ -225,6 +249,20 @@ public class HardwareTableSerializer {
           buf.putShort ((short) 0);
         }
         break;
+      case 11:
+        if (0 < hardwareTable.routerBoard && hardwareTable.routerBoard < 16383) {
+          buf.putShort ((short) ((hardwareTable.routerBoard + 1) * 2));
+        } else {
+          buf.putShort ((short) 0);
+        }
+        break;
+      case 12:
+        if (0 < hardwareTable.simNo && hardwareTable.simNo < 16383) {
+          buf.putShort ((short) ((hardwareTable.simNo + 1) * 2));
+        } else {
+          buf.putShort ((short) 0);
+        }
+        break;
       }
     }
     for (short i = 0; i < dlen; i ++) {
@@ -269,6 +307,14 @@ public class HardwareTableSerializer {
         buf.putInt (4);
         buf.putInt (hardwareTable.speaker);
         break;
+      case 11:
+        buf.putInt (4);
+        buf.putInt (hardwareTable.routerBoard);
+        break;
+      case 12:
+        buf.putInt (4);
+        buf.putInt (hardwareTable.simNo);
+        break;
       }
     }
     return buf.array();
@@ -281,7 +327,7 @@ public class HardwareTableSerializer {
     short count = buf.getShort();
     HardwareTable hardwareTable = new HardwareTable();
     if (count > 0) {
-      short [] dtags = new short[10];
+      short [] dtags = new short[12];
       int dlen = 0;
       short tag = 0;
       for (short i = 0; i < count; i ++) {
@@ -323,6 +369,12 @@ public class HardwareTableSerializer {
             break;
           case 10:
             hardwareTable.speaker = v / 2 - 1;
+            break;
+          case 11:
+            hardwareTable.routerBoard = v / 2 - 1;
+            break;
+          case 12:
+            hardwareTable.simNo = v / 2 - 1;
             break;
           default:
             break;
@@ -371,6 +423,14 @@ public class HardwareTableSerializer {
         case 10:
           buf.getInt();
           hardwareTable.speaker = buf.getInt();
+          break;
+        case 11:
+          buf.getInt();
+          hardwareTable.routerBoard = buf.getInt();
+          break;
+        case 12:
+          buf.getInt();
+          hardwareTable.simNo = buf.getInt();
           break;
         default:
           break;

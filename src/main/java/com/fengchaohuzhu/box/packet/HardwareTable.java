@@ -10,4 +10,6 @@ public class HardwareTable {
   public int antenna;
   public int cardReader;
   public int speaker;
+  public int routerBoard;
+  public int simNo;
 }
