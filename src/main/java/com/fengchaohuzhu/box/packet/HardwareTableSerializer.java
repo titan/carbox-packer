@@ -44,10 +44,10 @@ public class HardwareTableSerializer {
       }
       count ++;
     }
-    if (hardwareTable.androidBoard != 0) {
+    if (hardwareTable.systemBoard != 0) {
       tags[tlen] = 4;
       tlen ++;
-      if (0 < hardwareTable.androidBoard && hardwareTable.androidBoard < 16383) {
+      if (0 < hardwareTable.systemBoard && hardwareTable.systemBoard < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -201,8 +201,8 @@ public class HardwareTableSerializer {
         }
         break;
       case 4:
-        if (0 < hardwareTable.androidBoard && hardwareTable.androidBoard < 16383) {
-          buf.putShort ((short) ((hardwareTable.androidBoard + 1) * 2));
+        if (0 < hardwareTable.systemBoard && hardwareTable.systemBoard < 16383) {
+          buf.putShort ((short) ((hardwareTable.systemBoard + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
@@ -281,7 +281,7 @@ public class HardwareTableSerializer {
         break;
       case 4:
         buf.putInt (4);
-        buf.putInt (hardwareTable.androidBoard);
+        buf.putInt (hardwareTable.systemBoard);
         break;
       case 5:
         buf.putInt (4);
@@ -350,7 +350,7 @@ public class HardwareTableSerializer {
             hardwareTable.timestamp = v / 2 - 1;
             break;
           case 4:
-            hardwareTable.androidBoard = v / 2 - 1;
+            hardwareTable.systemBoard = v / 2 - 1;
             break;
           case 5:
             hardwareTable.lockBoard = v / 2 - 1;
@@ -398,7 +398,7 @@ public class HardwareTableSerializer {
           break;
         case 4:
           buf.getInt();
-          hardwareTable.androidBoard = buf.getInt();
+          hardwareTable.systemBoard = buf.getInt();
           break;
         case 5:
           buf.getInt();

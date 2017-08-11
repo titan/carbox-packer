@@ -8,7 +8,7 @@ public class UpgradeSerializer {
     short tlen = 0;
     short [] dtags = new short [11];
     short dlen = 0;
-    byte [][] strbytes = new byte[3][];
+    byte [][] strbytes = new byte[2][];
     if (upgrade.sn != 0) {
       tags[tlen] = 1;
       tlen ++;
@@ -45,10 +45,10 @@ public class UpgradeSerializer {
       }
       count ++;
     }
-    if (upgrade.androidBoard != 0) {
+    if (upgrade.systemBoard != 0) {
       tags[tlen] = 4;
       tlen ++;
-      if (0 < upgrade.androidBoard && upgrade.androidBoard < 16383) {
+      if (0 < upgrade.systemBoard && upgrade.systemBoard < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -90,13 +90,16 @@ public class UpgradeSerializer {
       }
       count ++;
     }
-    if (upgrade.boxosChecksum != null) {
+    if (upgrade.boxosChecksum != 0) {
       tags[tlen] = 8;
       tlen ++;
-      dtags[dlen] = 8;
-      dlen ++;
-      strbytes[1] = upgrade.boxosChecksum.getBytes ("utf-8");
-      len += 2 + 4 + strbytes[1].length;
+      if (0 < upgrade.boxosChecksum && upgrade.boxosChecksum < 16383) {
+        len += 2;
+      } else {
+        len += 2 + 4 + 8;
+        dtags[dlen] = 8;
+        dlen ++;
+      }
       count ++;
     }
     if (upgrade.supervisorUrl != null) {
@@ -104,8 +107,8 @@ public class UpgradeSerializer {
       tlen ++;
       dtags[dlen] = 9;
       dlen ++;
-      strbytes[2] = upgrade.supervisorUrl.getBytes ("utf-8");
-      len += 2 + 4 + strbytes[2].length;
+      strbytes[1] = upgrade.supervisorUrl.getBytes ("utf-8");
+      len += 2 + 4 + strbytes[1].length;
       count ++;
     }
     if (upgrade.supervisorVersion != 0) {
@@ -126,7 +129,7 @@ public class UpgradeSerializer {
       if (0 < upgrade.supervisorChecksum && upgrade.supervisorChecksum < 16383) {
         len += 2;
       } else {
-        len += 2 + 4 + 4;
+        len += 2 + 4 + 8;
         dtags[dlen] = 11;
         dlen ++;
       }
@@ -181,8 +184,8 @@ public class UpgradeSerializer {
         }
         break;
       case 4:
-        if (0 < upgrade.androidBoard && upgrade.androidBoard < 16383) {
-          buf.putShort ((short) ((upgrade.androidBoard + 1) * 2));
+        if (0 < upgrade.systemBoard && upgrade.systemBoard < 16383) {
+          buf.putShort ((short) ((upgrade.systemBoard + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
@@ -205,7 +208,11 @@ public class UpgradeSerializer {
         }
         break;
       case 8:
-        buf.putShort ((short) 0);
+        if (0 < upgrade.boxosChecksum && upgrade.boxosChecksum < 16383) {
+          buf.putShort ((short) ((upgrade.boxosChecksum + 1) * 2));
+        } else {
+          buf.putShort ((short) 0);
+        }
         break;
       case 9:
         buf.putShort ((short) 0);
@@ -242,7 +249,7 @@ public class UpgradeSerializer {
         break;
       case 4:
         buf.putInt (4);
-        buf.putInt (upgrade.androidBoard);
+        buf.putInt (upgrade.systemBoard);
         break;
       case 5:
         buf.putInt (4);
@@ -257,20 +264,20 @@ public class UpgradeSerializer {
         buf.putInt (upgrade.boxosVersion);
         break;
       case 8:
-        buf.putInt (strbytes[1].length);
-        buf.put (strbytes[1]);
+        buf.putInt (8);
+        buf.putLong (upgrade.boxosChecksum);
         break;
       case 9:
-        buf.putInt (strbytes[2].length);
-        buf.put (strbytes[2]);
+        buf.putInt (strbytes[1].length);
+        buf.put (strbytes[1]);
         break;
       case 10:
         buf.putInt (4);
         buf.putInt (upgrade.supervisorVersion);
         break;
       case 11:
-        buf.putInt (4);
-        buf.putInt (upgrade.supervisorChecksum);
+        buf.putInt (8);
+        buf.putLong (upgrade.supervisorChecksum);
         break;
       }
     }
@@ -307,13 +314,16 @@ public class UpgradeSerializer {
             upgrade.timestamp = v / 2 - 1;
             break;
           case 4:
-            upgrade.androidBoard = v / 2 - 1;
+            upgrade.systemBoard = v / 2 - 1;
             break;
           case 5:
             upgrade.lockBoard = v / 2 - 1;
             break;
           case 7:
             upgrade.boxosVersion = v / 2 - 1;
+            break;
+          case 8:
+            upgrade.boxosChecksum = v / 2 - 1;
             break;
           case 10:
             upgrade.supervisorVersion = v / 2 - 1;
@@ -343,7 +353,7 @@ public class UpgradeSerializer {
           break;
         case 4:
           buf.getInt();
-          upgrade.androidBoard = buf.getInt();
+          upgrade.systemBoard = buf.getInt();
           break;
         case 5:
           buf.getInt();
@@ -360,13 +370,10 @@ public class UpgradeSerializer {
           buf.getInt();
           upgrade.boxosVersion = buf.getInt();
           break;
-        case 8: {
-          int len = buf.getInt();
-          byte tmp [] = new byte[len];
-          buf.get (tmp);
-          upgrade.boxosChecksum = new String (tmp, "utf-8");
-        }
-        break;
+        case 8:
+          buf.getInt();
+          upgrade.boxosChecksum = buf.getLong();
+          break;
         case 9: {
           int len = buf.getInt();
           byte tmp [] = new byte[len];
@@ -380,7 +387,7 @@ public class UpgradeSerializer {
           break;
         case 11:
           buf.getInt();
-          upgrade.supervisorChecksum = buf.getInt();
+          upgrade.supervisorChecksum = buf.getLong();
           break;
         default:
           break;

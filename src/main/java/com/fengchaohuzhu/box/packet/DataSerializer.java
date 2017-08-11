@@ -44,10 +44,10 @@ public class DataSerializer {
       }
       count ++;
     }
-    if (data.androidBoard != 0) {
+    if (data.systemBoard != 0) {
       tags[tlen] = 4;
       tlen ++;
-      if (0 < data.androidBoard && data.androidBoard < 16383) {
+      if (0 < data.systemBoard && data.systemBoard < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -213,8 +213,8 @@ public class DataSerializer {
         }
         break;
       case 4:
-        if (0 < data.androidBoard && data.androidBoard < 16383) {
-          buf.putShort ((short) ((data.androidBoard + 1) * 2));
+        if (0 < data.systemBoard && data.systemBoard < 16383) {
+          buf.putShort ((short) ((data.systemBoard + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
@@ -300,7 +300,7 @@ public class DataSerializer {
         break;
       case 4:
         buf.putInt (4);
-        buf.putInt (data.androidBoard);
+        buf.putInt (data.systemBoard);
         break;
       case 5:
         buf.putInt (4);
@@ -373,7 +373,7 @@ public class DataSerializer {
             data.timestamp = v / 2 - 1;
             break;
           case 4:
-            data.androidBoard = v / 2 - 1;
+            data.systemBoard = v / 2 - 1;
             break;
           case 5:
             data.lockBoard = v / 2 - 1;
@@ -424,7 +424,7 @@ public class DataSerializer {
           break;
         case 4:
           buf.getInt();
-          data.androidBoard = buf.getInt();
+          data.systemBoard = buf.getInt();
           break;
         case 5:
           buf.getInt();

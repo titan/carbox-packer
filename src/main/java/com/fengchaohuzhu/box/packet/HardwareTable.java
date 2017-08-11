@@ -3,7 +3,7 @@ public class HardwareTable {
   public int sn;
   public int version;
   public long timestamp;
-  public int androidBoard;
+  public int systemBoard;
   public int lockBoard;
   public int lockAmount;
   public int wireless;

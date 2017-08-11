@@ -3,12 +3,12 @@ public class Upgrade {
   public int sn;
   public int version;
   public long timestamp;
-  public int androidBoard;
+  public int systemBoard;
   public int lockBoard;
   public String boxosUrl;
   public int boxosVersion;
-  public String boxosChecksum;
+  public long boxosChecksum;
   public String supervisorUrl;
   public int supervisorVersion;
-  public int supervisorChecksum;
+  public long supervisorChecksum;
 }
