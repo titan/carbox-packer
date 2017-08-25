@@ -1,13 +1,13 @@
 (package com.fengchaohuzhu.box.packet)
 
 (struct data
-  (int 1 sn)
-  (int 2 version)
-  (long 3 timestamp)
-  (int 4 system-board)
-  (int 5 lock-board)
-  (int 6 boxos-version)
-  (int 7 supervisor-version)
+  (int 1 sn) ;; 当前请求序列号
+  (int 2 version) ;; 当前命令协议号
+  (long 3 timestamp) ;; 当前服务器的时间戳
+  (int 4 system-board) ;; 主板类型编号
+  (int 5 lock-board) ;; 锁控板类型编号
+  (int 6 boxos-version) ;; 寄存柜操作系统版本号
+  (int 7 supervisor-version) ;; 监管程序版本号
   (int 8 cpu)
   (int 9 memory)
   (int 10 storage)
