@@ -1,8 +1,8 @@
-import data, sync_time, upgrade, register, hardware_table, zeropack
+import data, sync_time, upgrade, register, hardware_table, lock_error, zeropack
 import sequtils, strutils
 type
   CommandType* {.pure.} = enum
-    UNKNOWN = 0, DATA = 1, SYNC_TIME = 2, UPGRADE = 3, REGISTER = 4, HARDWARE_TABLE = 5
+    UNKNOWN = 0, DATA = 1, SYNC_TIME = 2, UPGRADE = 3, REGISTER = 4, HARDWARE_TABLE = 5, LOCK_ERROR = 6
   MAC* = array[0..5, byte]
   PackResultObject* = object of RootObj
     mac*: MAC
@@ -14,6 +14,7 @@ type
     of CommandType.UPGRADE: upgrade*: ref Upgrade
     of CommandType.REGISTER: register*: ref Register
     of CommandType.HARDWARE_TABLE: hardware_table*: ref HardwareTable
+    of CommandType.LOCK_ERROR: lock_error*: ref LockError
   PackResult* = ref PackResultObject
 
 const version: int = 0
@@ -105,6 +106,13 @@ proc encode_with_mac*(hardware_table: ref HardwareTable, mac: MAC): seq[byte] =
   let zipped_buf = zeropack(buf)
   return encode(zipped_buf, CommandType.HARDWARE_TABLE, mac)
 
+proc encode_with_mac*(lock_error: ref LockError, mac: MAC): seq[byte] =
+  let size: int = lock_error.calculate_size()
+  var buf: seq[byte] = newSeq[byte](size)
+  discard lock_error.encode_into(buf, 0)
+  let zipped_buf = zeropack(buf)
+  return encode(zipped_buf, CommandType.LOCK_ERROR, mac)
+
 proc decode*(buf: seq[byte], offset: int, length: int): PackResult =
   var
     packed_size = 0
@@ -139,6 +147,8 @@ proc decode*(buf: seq[byte], offset: int, length: int): PackResult =
       result = PackResult(cmd_type: CommandType.REGISTER, mac: mac, version: ver, register: register.decode_from(unzipped, 0))
     of 5:
       result = PackResult(cmd_type: CommandType.HARDWARE_TABLE, mac: mac, version: ver, hardware_table: hardware_table.decode_from(unzipped, 0))
+    of 6:
+      result = PackResult(cmd_type: CommandType.LOCK_ERROR, mac: mac, version: ver, lock_error: lock_error.decode_from(unzipped, 0))
     else:
       return nil
 

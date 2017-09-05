@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.0"
+version       = "1.0.1"
 author        = "Titan"
 description   = "Packet packer and unpacker for box"
 license       = "MIT"

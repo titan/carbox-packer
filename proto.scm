@@ -56,3 +56,12 @@
   (long 3 timestamp) ;; 当前服务器的时间戳
   (int 4 pin) ;; 设备 PIN 码
   ) ;; 设备第一次注册用
+
+(struct lock-error
+  (int 1 sn) ;; 当前请求序列号
+  (int 2 version) ;; 当前命令协议号
+  (long 3 timestamp) ;; 当前服务器的时间戳
+  (int 4 board) ;; 锁控板编号
+  (int 5 lock) ;; 锁编号
+  (int 6 error-type) ;; 错误编号
+  )

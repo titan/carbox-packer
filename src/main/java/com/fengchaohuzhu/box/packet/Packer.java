@@ -104,8 +104,8 @@ public class Packer {
   /**
    * 编码 Register 命令
    *
-   * @param mac 接收 Upgrade 命令的设备 mac 地址
-   * @param data Upgrade 命令对象
+   * @param mac 接收 Register 命令的设备 mac 地址
+   * @param data Register 命令对象
    * @return 编码完成的 byte 数组或 null
    */
   public static byte[] encode (byte[] mac, Register data) {
@@ -121,13 +121,29 @@ public class Packer {
    * 编码 HardwareTable 命令
    *
    * @param mac 接收 HardwareTable 命令的设备 mac 地址
-   * @param data Upgrade 命令对象
+   * @param data HardwareTable 命令对象
    * @return 编码完成的 byte 数组或 null
    */
   public static byte[] encode (byte[] mac, HardwareTable data) {
     try {
       byte [] payload = HardwareTableSerializer.encode0Pack (data);
       return encode (mac, CommandType.HARDWARE_TABLE, payload);
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+  /**
+   * 编码 LockError 命令
+   *
+   * @param mac 接收 LockError 命令的设备 mac 地址
+   * @param data LockError 命令对象
+   * @return 编码完成的 byte 数组或 null
+   */
+  public static byte[] encode (byte[] mac, LockError data) {
+    try {
+      byte [] payload = LockErrorSerializer.encode0Pack (data);
+      return encode (mac, CommandType.LOCK_ERROR, payload);
     } catch (Exception e) {
       return null;
     }
@@ -209,6 +225,11 @@ public class Packer {
     case 5: {
       result.type = CommandType.HARDWARE_TABLE;
       result.hardwareTable = HardwareTableSerializer.decode0Pack (payload);
+      break;
+    }
+    case 6: {
+      result.type = CommandType.LOCK_ERROR;
+      result.lockError = LockErrorSerializer.decode0Pack (payload);
       break;
     }
     default:

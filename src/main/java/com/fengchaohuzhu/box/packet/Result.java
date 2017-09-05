@@ -38,4 +38,8 @@ public class Result {
    * 硬件配置表
    */
   public HardwareTable hardwareTable = null;
+  /**
+   * 锁错误命令
+   */
+  public LockError lockError = null;
 }
