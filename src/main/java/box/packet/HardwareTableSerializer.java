@@ -1,17 +1,17 @@
-package com.fengchaohuzhu.box.packet;
+package box.packet;
 import java.nio.ByteBuffer;
-public class DataSerializer {
-  public static byte [] encode (Data data) {
+public class HardwareTableSerializer {
+  public static byte [] encode (HardwareTable hardwareTable) {
     short count = 0;
     int len = 2;
-    short [] tags = new short [13];
+    short [] tags = new short [12];
     short tlen = 0;
-    short [] dtags = new short [13];
+    short [] dtags = new short [12];
     short dlen = 0;
-    if (data.sn != 0) {
+    if (hardwareTable.sn != 0) {
       tags[tlen] = 1;
       tlen ++;
-      if (0 < data.sn && data.sn < 16383) {
+      if (0 < hardwareTable.sn && hardwareTable.sn < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -20,10 +20,10 @@ public class DataSerializer {
       }
       count ++;
     }
-    if (data.version != 0) {
+    if (hardwareTable.version != 0) {
       tags[tlen] = 2;
       tlen ++;
-      if (0 < data.version && data.version < 16383) {
+      if (0 < hardwareTable.version && hardwareTable.version < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -32,10 +32,10 @@ public class DataSerializer {
       }
       count ++;
     }
-    if (data.timestamp != 0) {
+    if (hardwareTable.timestamp != 0) {
       tags[tlen] = 3;
       tlen ++;
-      if (0 < data.timestamp && data.timestamp < 16383) {
+      if (0 < hardwareTable.timestamp && hardwareTable.timestamp < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 8;
@@ -44,10 +44,10 @@ public class DataSerializer {
       }
       count ++;
     }
-    if (data.systemBoard != 0) {
+    if (hardwareTable.systemBoard != 0) {
       tags[tlen] = 4;
       tlen ++;
-      if (0 < data.systemBoard && data.systemBoard < 16383) {
+      if (0 < hardwareTable.systemBoard && hardwareTable.systemBoard < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -56,10 +56,10 @@ public class DataSerializer {
       }
       count ++;
     }
-    if (data.lockBoard != 0) {
+    if (hardwareTable.lockBoard != 0) {
       tags[tlen] = 5;
       tlen ++;
-      if (0 < data.lockBoard && data.lockBoard < 16383) {
+      if (0 < hardwareTable.lockBoard && hardwareTable.lockBoard < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -68,10 +68,10 @@ public class DataSerializer {
       }
       count ++;
     }
-    if (data.boxosVersion != 0) {
+    if (hardwareTable.lockAmount != 0) {
       tags[tlen] = 6;
       tlen ++;
-      if (0 < data.boxosVersion && data.boxosVersion < 16383) {
+      if (0 < hardwareTable.lockAmount && hardwareTable.lockAmount < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -80,10 +80,10 @@ public class DataSerializer {
       }
       count ++;
     }
-    if (data.supervisorVersion != 0) {
+    if (hardwareTable.wireless != 0) {
       tags[tlen] = 7;
       tlen ++;
-      if (0 < data.supervisorVersion && data.supervisorVersion < 16383) {
+      if (0 < hardwareTable.wireless && hardwareTable.wireless < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -92,10 +92,10 @@ public class DataSerializer {
       }
       count ++;
     }
-    if (data.cpu != 0) {
+    if (hardwareTable.antenna != 0) {
       tags[tlen] = 8;
       tlen ++;
-      if (0 < data.cpu && data.cpu < 16383) {
+      if (0 < hardwareTable.antenna && hardwareTable.antenna < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -104,10 +104,10 @@ public class DataSerializer {
       }
       count ++;
     }
-    if (data.memory != 0) {
+    if (hardwareTable.cardReader != 0) {
       tags[tlen] = 9;
       tlen ++;
-      if (0 < data.memory && data.memory < 16383) {
+      if (0 < hardwareTable.cardReader && hardwareTable.cardReader < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -116,10 +116,10 @@ public class DataSerializer {
       }
       count ++;
     }
-    if (data.storage != 0) {
+    if (hardwareTable.speaker != 0) {
       tags[tlen] = 10;
       tlen ++;
-      if (0 < data.storage && data.storage < 16383) {
+      if (0 < hardwareTable.speaker && hardwareTable.speaker < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -128,10 +128,10 @@ public class DataSerializer {
       }
       count ++;
     }
-    if (data.battery != 0) {
+    if (hardwareTable.routerBoard != 0) {
       tags[tlen] = 11;
       tlen ++;
-      if (0 < data.battery && data.battery < 16383) {
+      if (0 < hardwareTable.routerBoard && hardwareTable.routerBoard < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -140,26 +140,14 @@ public class DataSerializer {
       }
       count ++;
     }
-    if (data.mobile != 0) {
+    if (hardwareTable.simNo != 0) {
       tags[tlen] = 12;
       tlen ++;
-      if (0 < data.mobile && data.mobile < 16383) {
+      if (0 < hardwareTable.simNo && hardwareTable.simNo < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
         dtags[dlen] = 12;
-        dlen ++;
-      }
-      count ++;
-    }
-    if (data.wifi != 0) {
-      tags[tlen] = 13;
-      tlen ++;
-      if (0 < data.wifi && data.wifi < 16383) {
-        len += 2;
-      } else {
-        len += 2 + 4 + 4;
-        dtags[dlen] = 13;
         dlen ++;
       }
       count ++;
@@ -192,92 +180,85 @@ public class DataSerializer {
       }
       switch (tags[i]) {
       case 1:
-        if (0 < data.sn && data.sn < 16383) {
-          buf.putShort ((short) ((data.sn + 1) * 2));
+        if (0 < hardwareTable.sn && hardwareTable.sn < 16383) {
+          buf.putShort ((short) ((hardwareTable.sn + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 2:
-        if (0 < data.version && data.version < 16383) {
-          buf.putShort ((short) ((data.version + 1) * 2));
+        if (0 < hardwareTable.version && hardwareTable.version < 16383) {
+          buf.putShort ((short) ((hardwareTable.version + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 3:
-        if (0 < data.timestamp && data.timestamp < 16383) {
-          buf.putShort ((short) ((data.timestamp + 1) * 2));
+        if (0 < hardwareTable.timestamp && hardwareTable.timestamp < 16383) {
+          buf.putShort ((short) ((hardwareTable.timestamp + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 4:
-        if (0 < data.systemBoard && data.systemBoard < 16383) {
-          buf.putShort ((short) ((data.systemBoard + 1) * 2));
+        if (0 < hardwareTable.systemBoard && hardwareTable.systemBoard < 16383) {
+          buf.putShort ((short) ((hardwareTable.systemBoard + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 5:
-        if (0 < data.lockBoard && data.lockBoard < 16383) {
-          buf.putShort ((short) ((data.lockBoard + 1) * 2));
+        if (0 < hardwareTable.lockBoard && hardwareTable.lockBoard < 16383) {
+          buf.putShort ((short) ((hardwareTable.lockBoard + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 6:
-        if (0 < data.boxosVersion && data.boxosVersion < 16383) {
-          buf.putShort ((short) ((data.boxosVersion + 1) * 2));
+        if (0 < hardwareTable.lockAmount && hardwareTable.lockAmount < 16383) {
+          buf.putShort ((short) ((hardwareTable.lockAmount + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 7:
-        if (0 < data.supervisorVersion && data.supervisorVersion < 16383) {
-          buf.putShort ((short) ((data.supervisorVersion + 1) * 2));
+        if (0 < hardwareTable.wireless && hardwareTable.wireless < 16383) {
+          buf.putShort ((short) ((hardwareTable.wireless + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 8:
-        if (0 < data.cpu && data.cpu < 16383) {
-          buf.putShort ((short) ((data.cpu + 1) * 2));
+        if (0 < hardwareTable.antenna && hardwareTable.antenna < 16383) {
+          buf.putShort ((short) ((hardwareTable.antenna + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 9:
-        if (0 < data.memory && data.memory < 16383) {
-          buf.putShort ((short) ((data.memory + 1) * 2));
+        if (0 < hardwareTable.cardReader && hardwareTable.cardReader < 16383) {
+          buf.putShort ((short) ((hardwareTable.cardReader + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 10:
-        if (0 < data.storage && data.storage < 16383) {
-          buf.putShort ((short) ((data.storage + 1) * 2));
+        if (0 < hardwareTable.speaker && hardwareTable.speaker < 16383) {
+          buf.putShort ((short) ((hardwareTable.speaker + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 11:
-        if (0 < data.battery && data.battery < 16383) {
-          buf.putShort ((short) ((data.battery + 1) * 2));
+        if (0 < hardwareTable.routerBoard && hardwareTable.routerBoard < 16383) {
+          buf.putShort ((short) ((hardwareTable.routerBoard + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 12:
-        if (0 < data.mobile && data.mobile < 16383) {
-          buf.putShort ((short) ((data.mobile + 1) * 2));
-        } else {
-          buf.putShort ((short) 0);
-        }
-        break;
-      case 13:
-        if (0 < data.wifi && data.wifi < 16383) {
-          buf.putShort ((short) ((data.wifi + 1) * 2));
+        if (0 < hardwareTable.simNo && hardwareTable.simNo < 16383) {
+          buf.putShort ((short) ((hardwareTable.simNo + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
@@ -288,69 +269,65 @@ public class DataSerializer {
       switch (dtags[i]) {
       case 1:
         buf.putInt (4);
-        buf.putInt (data.sn);
+        buf.putInt (hardwareTable.sn);
         break;
       case 2:
         buf.putInt (4);
-        buf.putInt (data.version);
+        buf.putInt (hardwareTable.version);
         break;
       case 3:
         buf.putInt (8);
-        buf.putLong (data.timestamp);
+        buf.putLong (hardwareTable.timestamp);
         break;
       case 4:
         buf.putInt (4);
-        buf.putInt (data.systemBoard);
+        buf.putInt (hardwareTable.systemBoard);
         break;
       case 5:
         buf.putInt (4);
-        buf.putInt (data.lockBoard);
+        buf.putInt (hardwareTable.lockBoard);
         break;
       case 6:
         buf.putInt (4);
-        buf.putInt (data.boxosVersion);
+        buf.putInt (hardwareTable.lockAmount);
         break;
       case 7:
         buf.putInt (4);
-        buf.putInt (data.supervisorVersion);
+        buf.putInt (hardwareTable.wireless);
         break;
       case 8:
         buf.putInt (4);
-        buf.putInt (data.cpu);
+        buf.putInt (hardwareTable.antenna);
         break;
       case 9:
         buf.putInt (4);
-        buf.putInt (data.memory);
+        buf.putInt (hardwareTable.cardReader);
         break;
       case 10:
         buf.putInt (4);
-        buf.putInt (data.storage);
+        buf.putInt (hardwareTable.speaker);
         break;
       case 11:
         buf.putInt (4);
-        buf.putInt (data.battery);
+        buf.putInt (hardwareTable.routerBoard);
         break;
       case 12:
         buf.putInt (4);
-        buf.putInt (data.mobile);
-        break;
-      case 13:
-        buf.putInt (4);
-        buf.putInt (data.wifi);
+        buf.putInt (hardwareTable.simNo);
         break;
       }
     }
     return buf.array();
   }
-  public static byte [] encode0Pack (Data data) {
-    return ZeroPack.pack (encode (data));
+  public static byte [] encode0Pack (HardwareTable hardwareTable) {
+    return ZeroPack.pack (encode (hardwareTable));
   }
-  public static Data decode (byte [] bytes) {
+  public static HardwareTable decode (byte [] bytes) {
     ByteBuffer buf = ByteBuffer.wrap (bytes);
     short count = buf.getShort();
-    Data data = new Data();
+    HardwareTable hardwareTable = new HardwareTable();
     if (count > 0) {
-      short [] dtags = new short[13];
+      short [] dtags = new short[12];
       int dlen = 0;
       short tag = 0;
       for (short i = 0; i < count; i ++) {
@@ -364,43 +341,40 @@ public class DataSerializer {
         } else {
           switch (tag) {
           case 1:
-            data.sn = v / 2 - 1;
+            hardwareTable.sn = v / 2 - 1;
             break;
           case 2:
-            data.version = v / 2 - 1;
+            hardwareTable.version = v / 2 - 1;
             break;
           case 3:
-            data.timestamp = v / 2 - 1;
+            hardwareTable.timestamp = v / 2 - 1;
             break;
           case 4:
-            data.systemBoard = v / 2 - 1;
+            hardwareTable.systemBoard = v / 2 - 1;
             break;
           case 5:
-            data.lockBoard = v / 2 - 1;
+            hardwareTable.lockBoard = v / 2 - 1;
             break;
           case 6:
-            data.boxosVersion = v / 2 - 1;
+            hardwareTable.lockAmount = v / 2 - 1;
             break;
           case 7:
-            data.supervisorVersion = v / 2 - 1;
+            hardwareTable.wireless = v / 2 - 1;
             break;
           case 8:
-            data.cpu = v / 2 - 1;
+            hardwareTable.antenna = v / 2 - 1;
             break;
           case 9:
-            data.memory = v / 2 - 1;
+            hardwareTable.cardReader = v / 2 - 1;
             break;
           case 10:
-            data.storage = v / 2 - 1;
+            hardwareTable.speaker = v / 2 - 1;
             break;
           case 11:
-            data.battery = v / 2 - 1;
+            hardwareTable.routerBoard = v / 2 - 1;
             break;
           case 12:
-            data.mobile = v / 2 - 1;
-            break;
-          case 13:
-            data.wifi = v / 2 - 1;
+            hardwareTable.simNo = v / 2 - 1;
             break;
           default:
             break;
@@ -412,65 +386,61 @@ public class DataSerializer {
         switch (dtags[i]) {
         case 1:
           buf.getInt();
-          data.sn = buf.getInt();
+          hardwareTable.sn = buf.getInt();
           break;
         case 2:
           buf.getInt();
-          data.version = buf.getInt();
+          hardwareTable.version = buf.getInt();
           break;
         case 3:
           buf.getInt();
-          data.timestamp = buf.getLong();
+          hardwareTable.timestamp = buf.getLong();
           break;
         case 4:
           buf.getInt();
-          data.systemBoard = buf.getInt();
+          hardwareTable.systemBoard = buf.getInt();
           break;
         case 5:
           buf.getInt();
-          data.lockBoard = buf.getInt();
+          hardwareTable.lockBoard = buf.getInt();
           break;
         case 6:
           buf.getInt();
-          data.boxosVersion = buf.getInt();
+          hardwareTable.lockAmount = buf.getInt();
           break;
         case 7:
           buf.getInt();
-          data.supervisorVersion = buf.getInt();
+          hardwareTable.wireless = buf.getInt();
           break;
         case 8:
           buf.getInt();
-          data.cpu = buf.getInt();
+          hardwareTable.antenna = buf.getInt();
           break;
         case 9:
           buf.getInt();
-          data.memory = buf.getInt();
+          hardwareTable.cardReader = buf.getInt();
           break;
         case 10:
           buf.getInt();
-          data.storage = buf.getInt();
+          hardwareTable.speaker = buf.getInt();
           break;
         case 11:
           buf.getInt();
-          data.battery = buf.getInt();
+          hardwareTable.routerBoard = buf.getInt();
           break;
         case 12:
           buf.getInt();
-          data.mobile = buf.getInt();
-          break;
-        case 13:
-          buf.getInt();
-          data.wifi = buf.getInt();
+          hardwareTable.simNo = buf.getInt();
           break;
         default:
           break;
         }
       }
     }
-    return data;
+    return hardwareTable;
   }
 
-  public static Data decode0Pack (byte [] bytes) {
+  public static HardwareTable decode0Pack (byte [] bytes) {
     return decode (ZeroPack.unpack (bytes));
   }
 }

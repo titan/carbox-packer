@@ -1,4 +1,4 @@
-package com.fengchaohuzhu.box.packet;
+package box.packet;
 import java.nio.ByteBuffer;
 public class UpgradeSerializer {
   public static byte [] encode (Upgrade upgrade) throws java.io.UnsupportedEncodingException {

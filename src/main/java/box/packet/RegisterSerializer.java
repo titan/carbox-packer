@@ -1,17 +1,17 @@
-package com.fengchaohuzhu.box.packet;
+package box.packet;
 import java.nio.ByteBuffer;
-public class SyncTimeSerializer {
-  public static byte [] encode (SyncTime syncTime) {
+public class RegisterSerializer {
+  public static byte [] encode (Register register) {
     short count = 0;
     int len = 2;
     short [] tags = new short [4];
     short tlen = 0;
     short [] dtags = new short [4];
     short dlen = 0;
-    if (syncTime.sn != 0) {
+    if (register.sn != 0) {
       tags[tlen] = 1;
       tlen ++;
-      if (0 < syncTime.sn && syncTime.sn < 16383) {
+      if (0 < register.sn && register.sn < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -20,10 +20,10 @@ public class SyncTimeSerializer {
       }
       count ++;
     }
-    if (syncTime.version != 0) {
+    if (register.version != 0) {
       tags[tlen] = 2;
       tlen ++;
-      if (0 < syncTime.version && syncTime.version < 16383) {
+      if (0 < register.version && register.version < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -32,10 +32,10 @@ public class SyncTimeSerializer {
       }
       count ++;
     }
-    if (syncTime.timestamp != 0) {
+    if (register.timestamp != 0) {
       tags[tlen] = 3;
       tlen ++;
-      if (0 < syncTime.timestamp && syncTime.timestamp < 16383) {
+      if (0 < register.timestamp && register.timestamp < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 8;
@@ -44,10 +44,10 @@ public class SyncTimeSerializer {
       }
       count ++;
     }
-    if (syncTime.zone != 0) {
+    if (register.pin != 0) {
       tags[tlen] = 4;
       tlen ++;
-      if (0 < syncTime.zone && syncTime.zone < 16383) {
+      if (0 < register.pin && register.pin < 16383) {
         len += 2;
       } else {
         len += 2 + 4 + 4;
@@ -84,29 +84,29 @@ public class SyncTimeSerializer {
       }
       switch (tags[i]) {
       case 1:
-        if (0 < syncTime.sn && syncTime.sn < 16383) {
-          buf.putShort ((short) ((syncTime.sn + 1) * 2));
+        if (0 < register.sn && register.sn < 16383) {
+          buf.putShort ((short) ((register.sn + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 2:
-        if (0 < syncTime.version && syncTime.version < 16383) {
-          buf.putShort ((short) ((syncTime.version + 1) * 2));
+        if (0 < register.version && register.version < 16383) {
+          buf.putShort ((short) ((register.version + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 3:
-        if (0 < syncTime.timestamp && syncTime.timestamp < 16383) {
-          buf.putShort ((short) ((syncTime.timestamp + 1) * 2));
+        if (0 < register.timestamp && register.timestamp < 16383) {
+          buf.putShort ((short) ((register.timestamp + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
         break;
       case 4:
-        if (0 < syncTime.zone && syncTime.zone < 16383) {
-          buf.putShort ((short) ((syncTime.zone + 1) * 2));
+        if (0 < register.pin && register.pin < 16383) {
+          buf.putShort ((short) ((register.pin + 1) * 2));
         } else {
           buf.putShort ((short) 0);
         }
@@ -117,31 +117,31 @@ public class SyncTimeSerializer {
       switch (dtags[i]) {
       case 1:
         buf.putInt (4);
-        buf.putInt (syncTime.sn);
+        buf.putInt (register.sn);
         break;
       case 2:
         buf.putInt (4);
-        buf.putInt (syncTime.version);
+        buf.putInt (register.version);
         break;
       case 3:
         buf.putInt (8);
-        buf.putLong (syncTime.timestamp);
+        buf.putLong (register.timestamp);
         break;
       case 4:
         buf.putInt (4);
-        buf.putInt (syncTime.zone);
+        buf.putInt (register.pin);
         break;
       }
     }
     return buf.array();
   }
-  public static byte [] encode0Pack (SyncTime syncTime) {
-    return ZeroPack.pack (encode (syncTime));
+  public static byte [] encode0Pack (Register register) {
+    return ZeroPack.pack (encode (register));
   }
-  public static SyncTime decode (byte [] bytes) {
+  public static Register decode (byte [] bytes) {
     ByteBuffer buf = ByteBuffer.wrap (bytes);
     short count = buf.getShort();
-    SyncTime syncTime = new SyncTime();
+    Register register = new Register();
     if (count > 0) {
       short [] dtags = new short[4];
       int dlen = 0;
@@ -157,16 +157,16 @@ public class SyncTimeSerializer {
         } else {
           switch (tag) {
           case 1:
-            syncTime.sn = v / 2 - 1;
+            register.sn = v / 2 - 1;
             break;
           case 2:
-            syncTime.version = v / 2 - 1;
+            register.version = v / 2 - 1;
             break;
           case 3:
-            syncTime.timestamp = v / 2 - 1;
+            register.timestamp = v / 2 - 1;
             break;
           case 4:
-            syncTime.zone = v / 2 - 1;
+            register.pin = v / 2 - 1;
             break;
           default:
             break;
@@ -178,29 +178,29 @@ public class SyncTimeSerializer {
         switch (dtags[i]) {
         case 1:
           buf.getInt();
-          syncTime.sn = buf.getInt();
+          register.sn = buf.getInt();
           break;
         case 2:
           buf.getInt();
-          syncTime.version = buf.getInt();
+          register.version = buf.getInt();
           break;
         case 3:
           buf.getInt();
-          syncTime.timestamp = buf.getLong();
+          register.timestamp = buf.getLong();
           break;
         case 4:
           buf.getInt();
-          syncTime.zone = buf.getInt();
+          register.pin = buf.getInt();
           break;
         default:
           break;
         }
       }
     }
-    return syncTime;
+    return register;
   }
 
-  public static SyncTime decode0Pack (byte [] bytes) {
+  public static Register decode0Pack (byte [] bytes) {
     return decode (ZeroPack.unpack (bytes));
   }
 }

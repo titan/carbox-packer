@@ -1,4 +1,4 @@
-package com.fengchaohuzhu.box.packet;
+package box.packet;
 public class SyncTime {
   public int sn;
   public int version;

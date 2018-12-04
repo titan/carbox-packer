@@ -1,4 +1,4 @@
-package com.fengchaohuzhu.box.packet;
+package box.packet;
 public class Register {
   public int sn;
   public int version;

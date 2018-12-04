@@ -1,4 +1,4 @@
-package com.fengchaohuzhu.box.packet;
+package box.packet;
 
 import java.util.Arrays;
 import java.util.zip.Adler32;
